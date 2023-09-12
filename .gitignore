@@ -1,2 +1,10 @@
 # Project exclude paths
 /out/
+
+/src/lab11/Main.java
+/src/lab11/UDPClient.java
+/src/lab11/UDPServer.java
+/src/_tests
+
+/src/lab12
+/SUAI_LABS_TP2.iml
