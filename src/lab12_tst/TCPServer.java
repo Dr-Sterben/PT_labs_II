@@ -148,7 +148,7 @@ public class TCPServer {
                 System.out.println("Пользователь " + userName + " присоединился к чату.");
 
                 String message;
-                while ((message = in.readLine()) != null) {
+                while (((message = in.readLine()) != null) && (!message.equals("@exit"))) {
                     System.out.println("Пользователь " + userName + ": " + message);
                     String[] parsedMsg = parseMessage(message);
                     if ((parsedMsg[0] != null) && (parsedMsg[1] != null)) {

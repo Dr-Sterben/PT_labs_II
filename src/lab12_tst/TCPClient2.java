@@ -27,42 +27,49 @@ public class TCPClient2 {
 
             String userName = consoleInput.readLine();
             out.println(userName);
+            Thread recieveThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        String serverResponse = "";
+                        try {
+                            serverResponse = in.readLine();
+                        } catch (Exception e) {
 
+                        }
+                        if (!Objects.equals(serverResponse, "")) {
+                            System.out.println(serverResponse);
+                        }
+                    }
+                }
+            });
+
+            Thread sendTread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            String message = consoleInput.readLine();
+                            if (!message.equals(""))
+                                out.println(message);
+                            if (message.equals("@exit")) {
+                                System.exit(0);
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+            });
+
+            sendTread.start();
+            recieveThread.start();
             while (true) {
-                Thread recieveThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            String serverResponse = "";
-                            try {
-                                serverResponse = in.readLine();
-                            } catch (Exception e) {
-
-                            }
-                            if (!Objects.equals(serverResponse, "")) {
-                                System.out.println(serverResponse);
-                            }
-                        }
-                    }
-                });
-
-                Thread sendTread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            try {
-                                String message = consoleInput.readLine();
-                                if (!message.equals(""))
-                                    out.println(message);
-                            } catch (Exception e) {
-
-                            }
-                        }
-                    }
-                });
-
-                sendTread.start();
-                recieveThread.start();
+                String message = consoleInput.readLine();
+                out.println(message);
+                if (message.equals("@exit")) {
+                    System.exit(0);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

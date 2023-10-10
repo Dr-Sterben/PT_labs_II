@@ -7,7 +7,7 @@ import java.util.Objects;
 public class TCPClient3 {
     //static final
     private static String SERVER_IP = "127.0.0.1"; // IP адрес сервера
-    private static int SERVER_PORT = 12346; // Порт сервера
+    private static int SERVER_PORT = 12345; // Порт сервера
 
     public static void main(String[] args) throws IOException {
         if (args.length == 2) {
@@ -27,45 +27,53 @@ public class TCPClient3 {
 
             String userName = consoleInput.readLine();
             out.println(userName);
+            Thread recieveThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        String serverResponse = "";
+                        try {
+                            serverResponse = in.readLine();
+                        } catch (Exception e) {
 
+                        }
+                        if (!Objects.equals(serverResponse, "")) {
+                            System.out.println(serverResponse);
+                        }
+                    }
+                }
+            });
+
+            Thread sendTread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            String message = consoleInput.readLine();
+                            if (!message.equals(""))
+                                out.println(message);
+                            if (message.equals("@exit")) {
+                                System.exit(0);
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+            });
+
+            sendTread.start();
+            recieveThread.start();
             while (true) {
-                Thread recieveThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            String serverResponse = "";
-                            try {
-                                serverResponse = in.readLine();
-                            } catch (Exception e) {
-
-                            }
-                            if (!Objects.equals(serverResponse, "")) {
-                                System.out.println(serverResponse);
-                            }
-                        }
-                    }
-                });
-
-                Thread sendTread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            try {
-                                String message = consoleInput.readLine();
-                                if (!message.equals(""))
-                                    out.println(message);
-                            } catch (Exception e) {
-
-                            }
-                        }
-                    }
-                });
-
-                sendTread.start();
-                recieveThread.start();
+                String message = consoleInput.readLine();
+                out.println(message);
+                if (message.equals("@exit")) {
+                    System.exit(0);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
+//
